@@ -2,15 +2,21 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import helmet from "helmet";
 import AdminRoutes from "./routes/AdminLogin.routes.js";
 import BestTownContactFormRoutes from "./routes/BestTownContactForm.routes.js";
 import BestTownNewsLetterRoutes from "./routes/BestTownNewsLetter.routes.js";
 import BestTownChatBotRoutes from "./routes/BestTownChatBot.routes.js";
+import SobahRouteOne from "./routes/WebsiteOneContact.routes.js"
+import SobahRouteTwo from "./routes/WebsiteTwoContact.routes.js"
+import SobahRouteThree from "./routes/WebsiteThreeContact.routes.js"
+import SobahRouteFour from "./routes/WebsiteFourContact.routes.js"
 
 dotenv.config();
 
 const app = express();
 
+app.use(helmet())
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -21,9 +27,13 @@ app.use(
   })
 );
 
-app.use("/admin", AdminRoutes);
-app.use("/BestTownContactForm", BestTownContactFormRoutes);
-app.use("/BestTownNewsLetter", BestTownNewsLetterRoutes);
-app.use("/BestTownChatBot", BestTownChatBotRoutes);
+app.use("/api/admin", AdminRoutes);
+app.use("/api/BestTownContactForm", BestTownContactFormRoutes);
+app.use("/api/BestTownNewsLetter", BestTownNewsLetterRoutes);
+app.use("/api/BestTownChatBot", BestTownChatBotRoutes);
+app.use("/api/SobahRouteOne",SobahRouteOne);
+app.use("/api/SobahRouteTwo",SobahRouteTwo);
+app.use("/api/SobahRouteThree",SobahRouteThree);
+app.use("/api/SobahRouteFour",SobahRouteFour);
 
 export default app;
