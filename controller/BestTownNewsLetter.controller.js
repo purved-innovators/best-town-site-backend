@@ -30,17 +30,22 @@ const getNewsLetter = async (req, res) => {
 
 const getPaginatedNewsLetter = async (req, res) => {
     try {
-        const {id} = req.userId;
+        const id = req.userId?.id;
+
         if (!id) {
             return res.status(401).json({ isSuccess: false, message: "Unauthorized access" });
         }
+
         const page = parseInt(req.query.page) || 1;
-        const limit = 30;
+        const limit = 10;
         const skip = (page - 1) * limit;
 
-        const [newsLetter, totalCount] = await Promise.all([
-            BestTownNewsLetterModel.find().skip(skip).limit(limit),
-            BestTownNewsLetterModel.countDocuments()
+        const [data, totalCount] = await Promise.all([
+            BestTownNewsLetterModel.find()
+                .sort({ createdAt: -1 })  // ✅ Sort by latest
+                .skip(skip)
+                .limit(limit),
+                BestTownNewsLetterModel.countDocuments()
         ]);
 
         const totalPages = Math.ceil(totalCount / limit);
@@ -50,7 +55,7 @@ const getPaginatedNewsLetter = async (req, res) => {
             page,
             totalPages,
             totalCount,
-            newsLetter
+            data
         });
     } catch (error) {
         return res.status(500).json({
@@ -61,5 +66,15 @@ const getPaginatedNewsLetter = async (req, res) => {
     }
 };
 
+const deleteRecord = async (req, res) => {
+    try {
+        const {id} = req.params;
+        const data = await BestTownNewsLetterModel.findByIdAndDelete(id)
+        res.status(200).json({message:"Data deleted successfully",isSuccess:true})
+    } catch (error) {
+        res.status(400).json(error)
+    }
+}
 
-export { addNewsLetter, getNewsLetter, getPaginatedNewsLetter };
+
+export { addNewsLetter, getNewsLetter, getPaginatedNewsLetter,deleteRecord };

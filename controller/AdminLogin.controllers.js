@@ -66,7 +66,7 @@ const createUser = async (req, res) => {
 const updatePassword = async (req, res) => {
   const { email, password } = req.body;
   const salt = await bcryptjs.genSalt(10);
-  Encryptedpassword = await bcryptjs.hash(password, salt);
+  const Encryptedpassword = await bcryptjs.hash(password, salt);
   try {
     const admin = await AdminModel.updateOne({
       email,
@@ -74,7 +74,7 @@ const updatePassword = async (req, res) => {
     });
     res
       .status(200)
-      .json({ isSuccess: true, message: "User created successfully" });
+      .json({ isSuccess: true, message: "Password Updated successfully" });
   } catch (error) {
     res.status(500).json({ isSuccess: false, message: error.message, error });
   }

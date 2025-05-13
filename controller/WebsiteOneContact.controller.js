@@ -2,6 +2,8 @@ import { SobhaOneContactFormModel } from "../modles/WebsiteOneContact.model.js";
 
 const addContactForm = async (req, res) => {
     const { name, email, ContactNumber, subject, message } = req.body;
+    console.log(req.body);
+    
     if (!name || !email || !ContactNumber || !subject || !message) {
         return res.status(400).json({ isSuccess: false, message: "Please provide all fields" });
     }
@@ -34,31 +36,35 @@ const getContactForm = async (req, res) => {
 
 const getPaginatedContactForm = async (req, res) => {
     try {
-        const {id} = req.userId;
+        const id = req.userId?.id;
+
         if (!id) {
             return res.status(401).json({ isSuccess: false, message: "Unauthorized access" });
         }
+
         const page = parseInt(req.query.page) || 1;
         const limit = 10;
-
         const skip = (page - 1) * limit;
 
-        const [contactForm, totalCount] = await Promise.all([
-            SobhaOneContactFormModel.find().skip(skip).limit(limit),
-            SobhaOneContactFormModel.countDocuments()
+        const [data, totalCount] = await Promise.all([
+            SobhaOneContactFormModel.find()
+                .sort({ createdAt: -1 })  // ✅ Sort by latest
+                .skip(skip)
+                .limit(limit),
+                SobhaOneContactFormModel.countDocuments()
         ]);
 
         const totalPages = Math.ceil(totalCount / limit);
 
-        res.status(200).json({
+        return res.status(200).json({
             isSuccess: true,
             page,
             totalPages,
             totalCount,
-            contactForm
+            data
         });
     } catch (error) {
-        res.status(500).json({
+        return res.status(500).json({
             isSuccess: false,
             message: error.message,
             error
@@ -66,6 +72,16 @@ const getPaginatedContactForm = async (req, res) => {
     }
 };
 
+const deleteRecord = async (req, res) => {
+    try {
+        const {id} = req.params;
+        const data = await SobhaOneContactFormModel.findByIdAndDelete(id)
+        res.status(200).json({message:"Data deleted successfully",isSuccess:true})
+    } catch (error) {
+        res.status(400).json(error)
+    }
+}
 
 
-export { addContactForm, getContactForm, getPaginatedContactForm };
+
+export { addContactForm, getContactForm, getPaginatedContactForm,deleteRecord };

@@ -11,11 +11,21 @@ import SobahRouteOne from "./routes/WebsiteOneContact.routes.js"
 import SobahRouteTwo from "./routes/WebsiteTwoContact.routes.js"
 import SobahRouteThree from "./routes/WebsiteThreeContact.routes.js"
 import SobahRouteFour from "./routes/WebsiteFourContact.routes.js"
+import rateLimit from 'express-rate-limit'
 
 dotenv.config();
 
 const app = express();
 
+const globalLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,   
+  max: 100,                   
+  standardHeaders: true,      
+  legacyHeaders: false,       
+  message: 'Too many requests, please try again later.'
+});
+
+app.use(globalLimiter);
 app.use(helmet())
 app.use(cookieParser());
 app.use(express.json());
@@ -24,6 +34,7 @@ app.use(express.static("public"));
 app.use(
   cors({
     origin: "*",
+    allowedHeaders: ['Authorization','Content-Type']
   })
 );
 

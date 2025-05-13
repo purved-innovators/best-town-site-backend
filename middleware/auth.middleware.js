@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 export const verifyJwt = async (req, res, next) => {
   try {
     const token =
-      req?.cookies?.token || req.header("Authorization")?.replace("Bearer ", "");
+    req.header("Authorization")?.replace("Bearer ", "");
 
     if (!token) {
       return res.status(300).json({ message: "unauthorized access",isSuccess:false });
@@ -11,7 +11,7 @@ export const verifyJwt = async (req, res, next) => {
 
     const userId = jwt.verify(token, process.env.JWT_SECRET);
 
-    if (!userId) {
+    if (!userId || !userId.id) {
       return res.status(300).json({ message: "Invalid token detail",isSuccess:false });
     }
 

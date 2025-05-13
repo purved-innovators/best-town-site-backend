@@ -34,22 +34,26 @@ const getContactForm = async (req, res) => {
 
 const getPaginatedContactForm = async (req, res) => {
     try {
-        const {id} = req.userId;
+        const { id } = req.userId;
         if (!id) {
             return res.status(401).json({ isSuccess: false, message: "Unauthorized access" });
         }
-        const page = parseInt(req.query.page) || 1;
+    
+        const page  = parseInt(req.query.page, 10) || 1;
         const limit = 10;
-
-        const skip = (page - 1) * limit;
-
+        const skip  = (page - 1) * limit;
+    
         const [contactForm, totalCount] = await Promise.all([
-            BestTownContactFormModel.find().skip(skip).limit(limit),
+            BestTownContactFormModel
+              .find()
+              .sort({ createdAt: -1 })   // ← newest first
+              .skip(skip)
+              .limit(limit),
             BestTownContactFormModel.countDocuments()
         ]);
-
+    
         const totalPages = Math.ceil(totalCount / limit);
-
+    
         res.status(200).json({
             isSuccess: true,
             page,
@@ -64,8 +68,18 @@ const getPaginatedContactForm = async (req, res) => {
             error
         });
     }
+    
 };
 
+const deleteRecord = async (req, res) => {
+    try {
+        const {id} = req.params;
+        const data = await BestTownContactFormModel.findByIdAndDelete(id)
+        res.status(200).json({message:"Data deleted successfully",isSuccess:true})
+    } catch (error) {
+        res.status(400).json(error)
+    }
+}
 
 
-export { addContactForm, getContactForm, getPaginatedContactForm };
+export { addContactForm, getContactForm, getPaginatedContactForm,  deleteRecord };

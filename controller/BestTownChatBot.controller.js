@@ -36,7 +36,10 @@ const getPaginatedChatBotData = async (req, res) => {
         const skip = (page - 1) * limit;
 
         const [data, totalCount] = await Promise.all([
-            BestTownChatBotModel.find().skip(skip).limit(limit),
+            BestTownChatBotModel.find()
+                .sort({ createdAt: -1 })  // ✅ Sort by latest
+                .skip(skip)
+                .limit(limit),
             BestTownChatBotModel.countDocuments()
         ]);
 
@@ -59,7 +62,14 @@ const getPaginatedChatBotData = async (req, res) => {
 };
 
 
+const deleteRecord = async (req, res) => {
+    try {
+        const {id} = req.params;
+        const data = await BestTownChatBotModel.findByIdAndDelete(id)
+        res.status(200).json({message:"Data deleted successfully",isSuccess:true})
+    } catch (error) {
+        res.status(400).json(error)
+    }
+}
 
-
-
-export {addChatBotData,getChatBotData,getPaginatedChatBotData}
+export {addChatBotData,getChatBotData,getPaginatedChatBotData,deleteRecord}
