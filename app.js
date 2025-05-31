@@ -13,6 +13,7 @@ import SobahRouteThree from "./routes/WebsiteThreeContact.routes.js"
 import SobahRouteFour from "./routes/WebsiteFourContact.routes.js"
 import BestTownCareerRoutes from "./routes/BestTownCareerSection.routes.js"
 import BestTownQuestionaryRoutes from "./routes/BestTownQuestionary.routes.js"
+import BestTownAdvisoryRoutes from "./routes/BestTownAdvisory.routes.js"
 import rateLimit from 'express-rate-limit'
 
 dotenv.config();
@@ -50,5 +51,6 @@ app.use("/api/SobahRouteThree",SobahRouteThree);
 app.use("/api/SobahRouteFour",SobahRouteFour);
 app.use("/api/BestTownCareer",BestTownCareerRoutes)
 app.use("/api/BestTownQuestionary",BestTownQuestionaryRoutes)
+app.use("/api/BestTownAdvisory",BestTownAdvisoryRoutes)
 
 export default app;
