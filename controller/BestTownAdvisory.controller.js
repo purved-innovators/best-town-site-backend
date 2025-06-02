@@ -4,6 +4,7 @@ import {BestTownAdvisoryModel} from "../modles/BestTownAdvisory.model.js";
 const addAdvisory = async (req, res) => {
     try {
         const { name, email, contactNumber, type } = req.body;
+        
         if (!email || !name || !contactNumber || !type) {
             return res.status(400).json({ isSuccess: false, message: "Please provide all fields" });
         }

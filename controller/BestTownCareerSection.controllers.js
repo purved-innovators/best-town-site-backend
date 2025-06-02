@@ -6,6 +6,8 @@ import fs from "fs";
 const addCareerInfo = async (req, res) => {
     try {
         const { name, email, contactNumber, message } = req.body;
+        // console.log(req.body);
+        
         if (!email || !name || !contactNumber || !message) {
             return res.status(400).json({ isSuccess: false, message: "Please provide all fields" });
         }
@@ -25,6 +27,8 @@ const addCareerInfo = async (req, res) => {
         return res.status(200).json({ isSuccess: true, message: "Career Info Added Successfully" });
     } catch (error) {
         return res.status(500).json({ isSuccess: false, message: error.message, error });
+    } finally {
+        cvLocalPath && fs.unlinkSync(cvLocalPath);
     }
 };
 

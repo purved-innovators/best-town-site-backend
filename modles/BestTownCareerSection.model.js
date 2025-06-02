@@ -15,7 +15,7 @@ const CareerSectionModel = new mongoose.Schema({
     },
     cvUrl: {
         type: String,
-        required: true,
+       
     },
     message: {
         type: String,
